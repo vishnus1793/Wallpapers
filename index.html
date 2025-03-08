@@ -14,12 +14,18 @@
             flex-wrap: wrap;
             justify-content: center;
         }
+        .gallery a {
+            margin: 10px;
+        }
         .gallery img {
             width: 250px;
             height: auto;
-            margin: 10px;
             border-radius: 8px;
             box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        .gallery img:hover {
+            transform: scale(1.05);
         }
     </style>
 </head>
@@ -49,10 +55,18 @@
                 files.forEach(file => {
                     if (imageExtensions.some(ext => file.path.endsWith(ext))) {
                         const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${file.path}`;
+                        const githubUrl = `https://github.com/${owner}/${repo}/blob/${branch}/${file.path}`;
+
+                        const linkElement = document.createElement("a");
+                        linkElement.href = githubUrl;
+                        linkElement.target = "_blank";
+
                         const imgElement = document.createElement("img");
                         imgElement.src = imageUrl;
                         imgElement.alt = "Wallpaper";
-                        imageGallery.appendChild(imgElement);
+
+                        linkElement.appendChild(imgElement);
+                        imageGallery.appendChild(linkElement);
                     }
                 });
             } catch (error) {
