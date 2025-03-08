@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallpaper Gallery</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .gallery img {
+            width: 250px;
+            height: auto;
+            margin: 10px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Wallpaper Gallery</h2>
+    <div class="gallery" id="imageGallery"></div>
+
+    <script>
+        async function fetchImages() {
+            const owner = "vishnus1793";
+            const repo = "Wallpapers";
+            const branch = "main"; // Change if necessary
+
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                const files = data.tree;
+
+                const imageGallery = document.getElementById("imageGallery");
+                imageGallery.innerHTML = "";
+
+                const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp"];
+
+                files.forEach(file => {
+                    if (imageExtensions.some(ext => file.path.endsWith(ext))) {
+                        const imageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${file.path}`;
+                        const imgElement = document.createElement("img");
+                        imgElement.src = imageUrl;
+                        imgElement.alt = "Wallpaper";
+                        imageGallery.appendChild(imgElement);
+                    }
+                });
+            } catch (error) {
+                console.error("Error fetching images:", error);
+            }
+        }
+
+        fetchImages();
+        setInterval(fetchImages, 86400000); // Refresh images daily
+    </script>
+
+</body>
+</html>
